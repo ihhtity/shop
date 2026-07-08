@@ -10,7 +10,8 @@ export default defineConfig({
     compression({
       algorithm: 'gzip',
       threshold: 10240,
-      minRatio: 0.8,
+      compressionOptions: { level: 9 },
+      deleteOriginFile: false,
     }),
     visualizer({
       open: false,

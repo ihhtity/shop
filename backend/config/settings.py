@@ -61,6 +61,10 @@ INSTALLED_APPS = [
     'apps.tasks',
     # 文件上传应用
     'apps.upload',
+    # 收藏应用
+    'apps.favorites',
+    # 通知应用
+    'apps.notifications',
 ]
 
 # 中间件配置列表
@@ -120,9 +124,36 @@ DATABASES = {
     # 默认数据库
     'default': {
         # 数据库引擎
-        'ENGINE': 'django.db.backends.sqlite3',
-        # 数据库文件路径
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        # 数据库名称
+        'NAME': os.environ.get('DB_NAME', 'shop'),
+        # 数据库用户名
+        'USER': os.environ.get('DB_USER', 'root'),
+        # 数据库密码
+        'PASSWORD': os.environ.get('DB_PASSWORD', '123456'),
+        # 数据库主机
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        # 数据库端口
+        'PORT': os.environ.get('DB_PORT', '3306'),
+        # 数据库连接超时时间
+        'CONN_MAX_AGE': 60,
+        # 数据库连接池大小
+        'CONN_POOL_SIZE': 100,
+        # 数据库连接重试次数
+        'ATOMIC_REQUESTS': True,
+        # 数据库连接重试次数
+        'ATOMIC_REQUESTS': 3,
+        # 数据库连接重试间隔
+        'ATOMIC_REQUESTS_INTERVAL': 1,
+        # 数据表前缀
+        'APPEND_PREFIX': 'shop_',
+        # 数据库额外选项
+        'OPTIONS': {
+            # 数据库字符集
+            'charset': 'utf8mb4',
+            # 数据库SQL模式
+            'sql_mode': 'STRICT_TRANS_TABLES',
+        },
     }
 }
 

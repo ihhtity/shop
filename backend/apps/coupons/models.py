@@ -22,7 +22,7 @@ class Coupon(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'coupons_coupon'
+        db_table = 'shop_coupon'
         verbose_name = '优惠券'
         verbose_name_plural = verbose_name
 
@@ -46,6 +46,6 @@ class UserCoupon(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'coupons_usercoupon'
+        db_table = 'shop_usercoupon'
         verbose_name = '用户优惠券'
         verbose_name_plural = verbose_name

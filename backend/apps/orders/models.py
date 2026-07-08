@@ -40,7 +40,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'orders_order'
+        db_table = 'shop_order'
         verbose_name = '订单'
         verbose_name_plural = verbose_name
 
@@ -59,6 +59,6 @@ class OrderItem(models.Model):
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='小计金额')
 
     class Meta:
-        db_table = 'orders_orderitem'
+        db_table = 'shop_orderitem'
         verbose_name = '订单商品'
         verbose_name_plural = verbose_name

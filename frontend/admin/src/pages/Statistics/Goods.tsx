@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Card, Table, Tag } from 'antd'
-import { getGoodsStat } from '@/api'
+import { getGoodsData } from '@/api'
 
 const GoodsStat = () => {
   const [data, setData] = useState<any[]>([])
@@ -10,7 +10,7 @@ const GoodsStat = () => {
   }, [])
 
   const fetchData = async () => {
-    const result = await getGoodsStat()
+    const result = await getGoodsData()
     if (result.code === 0) {
       setData(result.data)
     }

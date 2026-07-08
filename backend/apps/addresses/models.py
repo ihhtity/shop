@@ -14,7 +14,7 @@ class Address(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'addresses_address'
+        db_table = 'shop_address'
         verbose_name = '收货地址'
         verbose_name_plural = verbose_name
 

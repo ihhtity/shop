@@ -11,7 +11,7 @@ class Category(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'goods_category'
+        db_table = 'shop_category'
         verbose_name = '商品分类'
         verbose_name_plural = verbose_name
 
@@ -36,7 +36,7 @@ class Goods(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'goods_goods'
+        db_table = 'shop_goods'
         verbose_name = '商品'
         verbose_name_plural = verbose_name
 
@@ -52,7 +52,7 @@ class Specification(models.Model):
     image = models.CharField(max_length=256, blank=True, null=True, verbose_name='规格图片')
 
     class Meta:
-        db_table = 'goods_specification'
+        db_table = 'shop_specification'
         verbose_name = '商品规格'
         verbose_name_plural = verbose_name
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Input, NumberInput, Button, message } from 'antd'
+import { Form, Input, InputNumber, Button, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { createGoods } from '@/api'
 
@@ -30,10 +30,10 @@ const GoodsAdd = () => {
           <Input />
         </Form.Item>
         <Form.Item name="price" label="价格" rules={[{ required: true }]}>
-          <NumberInput min={0} />
+          <InputNumber min={0} />
         </Form.Item>
         <Form.Item name="stock" label="库存" rules={[{ required: true }]}>
-          <NumberInput min={0} />
+          <InputNumber min={0} />
         </Form.Item>
         <Form.Item name="description" label="描述">
           <Input.TextArea />

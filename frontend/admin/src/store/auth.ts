@@ -1,22 +1,24 @@
 import { create } from 'zustand'
+import { adminLogin, getAdminInfo } from '@/api/users'
 
-interface User {
+interface AdminUser {
   id: number
   username: string
-  nickname: string
-  phone: string
   email: string
+  phone: string
   avatar: string
-  is_admin: boolean
+  role: number
+  is_active: boolean
 }
 
 interface AuthState {
-  user: User | null
+  user: AdminUser | null
   token: string | null
   isAuthenticated: boolean
   login: (username: string, password: string) => Promise<void>
   logout: () => void
-  setUser: (user: User) => void
+  setUser: (user: AdminUser) => void
+  fetchUserInfo: () => Promise<void>
 }
 
 const useAuthStore = create<AuthState>((set) => ({
@@ -24,17 +26,12 @@ const useAuthStore = create<AuthState>((set) => ({
   token: localStorage.getItem('token') || null,
   isAuthenticated: !!localStorage.getItem('token'),
   login: async (username, password) => {
-    const response = await fetch('/api/users/login/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    })
-    const data = await response.json()
-    if (data.code === 0) {
-      localStorage.setItem('token', data.data.token)
-      set({ token: data.data.token, user: data.data.user, isAuthenticated: true })
+    const response = await adminLogin({ username, password })
+    if (response.code === 0) {
+      localStorage.setItem('token', response.data.token)
+      set({ token: response.data.token, user: response.data.user, isAuthenticated: true })
     } else {
-      throw new Error(data.message)
+      throw new Error(response.message)
     }
   },
   logout: () => {
@@ -42,6 +39,17 @@ const useAuthStore = create<AuthState>((set) => ({
     set({ user: null, token: null, isAuthenticated: false })
   },
   setUser: (user) => set({ user }),
+  fetchUserInfo: async () => {
+    try {
+      const response = await getAdminInfo()
+      if (response.code === 0) {
+        set({ user: response.data })
+      }
+    } catch (error) {
+      localStorage.removeItem('token')
+      set({ user: null, token: null, isAuthenticated: false })
+    }
+  },
 }))
 
 export default useAuthStore

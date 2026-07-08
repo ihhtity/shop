@@ -4,10 +4,10 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
   DollarOutlined,
-  TrendingUpOutlined,
+  RiseOutlined,
 } from '@ant-design/icons'
 import * as echarts from 'echarts'
-import { getDashboard, getSalesStat, getGoodsStat } from '@/api'
+import { getDashboardData, getSalesData } from '@/api'
 import type { DashboardData, SalesData } from '@/types'
 
 const Dashboard = () => {
@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchDashboard()
-    fetchSalesStat()
+    fetchSalesData()
   }, [])
 
   useEffect(() => {
@@ -31,14 +31,14 @@ const Dashboard = () => {
   }, [salesData])
 
   const fetchDashboard = async () => {
-    const result = await getDashboard()
+    const result = await getDashboardData()
     if (result.code === 0) {
       setData(result.data)
     }
   }
 
-  const fetchSalesStat = async () => {
-    const result = await getSalesStat({ days: 7 })
+  const fetchSalesData = async () => {
+    const result = await getSalesData()
     if (result.code === 0) {
       setSalesData(result.data)
     }
@@ -71,7 +71,7 @@ const Dashboard = () => {
             <Statistic
               title="订单总数"
               value={data?.total_orders || 0}
-              prefix={<TrendingUpOutlined />}
+              prefix={<RiseOutlined />}
             />
           </Card>
         </Col>

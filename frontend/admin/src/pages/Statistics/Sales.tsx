@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, Row, Col, Select } from 'antd'
 import * as echarts from 'echarts'
-import { getSalesStat } from '@/api'
+import { getSalesData } from '@/api'
 import type { SalesData } from '@/types'
 
 const SalesStat = () => {
@@ -24,7 +24,7 @@ const SalesStat = () => {
   }, [data])
 
   const fetchData = async () => {
-    const result = await getSalesStat({ days })
+    const result = await getSalesData()
     if (result.code === 0) {
       setData(result.data)
     }

@@ -25,6 +25,6 @@ class PaymentRecord(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        db_table = 'payment_paymentrecord'
+        db_table = 'shop_paymentrecord'
         verbose_name = '支付记录'
         verbose_name_plural = verbose_name

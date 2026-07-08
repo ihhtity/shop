@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import Login from '@/pages/Login'
+import Register from '@/pages/Register'
 import Dashboard from '@/pages/Dashboard'
 import GoodsList from '@/pages/Goods/List'
 import GoodsAdd from '@/pages/Goods/Add'
@@ -17,15 +18,20 @@ import GoodsStat from '@/pages/Statistics/Goods'
 import Profile from '@/pages/Settings/Profile'
 import System from '@/pages/Settings/System'
 
-const router = createBrowserRouter([
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/',
-    element: <Layout />,
-    children: [
+const router = createBrowserRouter(
+  [
+    {
+      path: '/login',
+      element: <Login />,
+    },
+    {
+      path: '/register',
+      element: <Register />,
+    },
+    {
+      path: '/',
+      element: <Layout />,
+      children: [
       {
         path: '/',
         element: <Dashboard />,
@@ -92,6 +98,11 @@ const router = createBrowserRouter([
       },
     ],
   },
-])
+], {
+  future: {
+    // v7_startTransition: true,
+    v7_relativeSplatPath: true,
+  },
+})
 
 export default router

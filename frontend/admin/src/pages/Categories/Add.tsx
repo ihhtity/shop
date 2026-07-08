@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Input, NumberInput, Button, message } from 'antd'
+import { Form, Input, InputNumber, Button, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { createCategory } from '@/api'
 
@@ -27,7 +27,7 @@ const CategoryAdd = () => {
           <Input />
         </Form.Item>
         <Form.Item name="sort_order" label="排序" rules={[{ required: true }]}>
-          <NumberInput min={0} />
+          <InputNumber min={0} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>

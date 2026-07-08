@@ -1,11 +1,23 @@
 import request from './request'
 
-export const getDashboard = () => request.get('/statistics/dashboard/')
+export const getDashboardData = () => request.get('/statistics/dashboard/')
 
-export const getSalesStat = (params?: { days?: number }) =>
-  request.get('/statistics/sales/', { params })
+export const getSalesData = (params?: {
+  start_date?: string
+  end_date?: string
+}) => request.get('/statistics/sales/', { params })
 
-export const getUserStat = (params?: { days?: number }) =>
-  request.get('/statistics/users/', { params })
+export const getGoodsData = (params?: {
+  start_date?: string
+  end_date?: string
+}) => request.get('/statistics/goods/', { params })
 
-export const getGoodsStat = () => request.get('/statistics/goods/')
+export const getUserData = (params?: {
+  start_date?: string
+  end_date?: string
+}) => request.get('/statistics/users/', { params })
+
+export const getOrderData = (params?: {
+  start_date?: string
+  end_date?: string
+}) => request.get('/statistics/orders/', { params })
