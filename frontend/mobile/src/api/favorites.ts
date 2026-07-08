@@ -8,5 +8,5 @@ export const addFavorite = (data: { goods_id: number }) =>
 export const removeFavorite = (id: number) =>
   request.delete(`/favorites/${id}/`)
 
-export const checkFavorite = (goods_id: number) =>
+export const getFavoriteStatus = (goods_id: number) =>
   request.get('/favorites/check/', { params: { goods_id } })

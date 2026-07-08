@@ -17,3 +17,24 @@ export const updateUserInfo = (data: Record<string, unknown>) =>
 
 export const changeUserPassword = (data: { old_password: string; new_password: string }) =>
   request.put('/users/user/password/', data)
+
+export const bindPhone = (data: { phone: string }) =>
+  request.post('/users/user/bind/phone/', data)
+
+export const unbindPhone = () =>
+  request.post('/users/user/unbind/phone/')
+
+export const changePhone = (data: { phone: string }) =>
+  request.post('/users/user/change/phone/', data)
+
+export const bindEmail = (data: { email: string; code: string }) =>
+  request.post('/users/user/bind/email/', data)
+
+export const unbindEmail = () =>
+  request.post('/users/user/unbind/email/')
+
+export const changeEmail = (data: { email: string; code: string }) =>
+  request.post('/users/user/change/email/', data)
+
+export const sendEmailCode = (data: { email: string }) =>
+  request.post('/users/user/send/email/code/', data)

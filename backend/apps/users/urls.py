@@ -8,6 +8,13 @@ urlpatterns = [
     path('user/logout/', UserLogoutView.as_view(), name='user_logout'),
     path('user/info/', UserInfoView.as_view(), name='user_info'),
     path('user/password/', UserChangePasswordView.as_view(), name='user_change_password'),
+    path('user/bind/phone/', BindPhoneView.as_view(), name='user_bind_phone'),
+    path('user/unbind/phone/', UnbindPhoneView.as_view(), name='user_unbind_phone'),
+    path('user/change/phone/', ChangePhoneView.as_view(), name='user_change_phone'),
+    path('user/send/email/code/', SendEmailCodeView.as_view(), name='user_send_email_code'),
+    path('user/bind/email/', BindEmailView.as_view(), name='user_bind_email'),
+    path('user/unbind/email/', UnbindEmailView.as_view(), name='user_unbind_email'),
+    path('user/change/email/', ChangeEmailView.as_view(), name='user_change_email'),
 
     path('admin/register/', AdminRegisterView.as_view(), name='admin_register'),
     path('admin/login/', AdminLoginView.as_view(), name='admin_login'),

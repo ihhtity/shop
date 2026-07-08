@@ -119,7 +119,7 @@ function Cart() {
           <span className="total-label">合计:</span>
           <span className="total-price">¥{totalPrice}</span>
         </div>
-        <button className="checkout-btn" onClick={() => navigate('/orders/create')}>结算({selectedItems.length})</button>
+        <button className="checkout-btn" onClick={() => navigate('/checkout')}>结算({selectedItems.length})</button>
       </div>
     </div>
   )

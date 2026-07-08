@@ -5,7 +5,10 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView,
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.core.cache import cache
+import random
+import re
 from .models import User, AdminUser
 from .serializers import (
     UserSerializer, UserRegisterSerializer, UserLoginSerializer, WechatLoginSerializer,
@@ -266,3 +269,97 @@ class AdminDeleteView(DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         response = super().destroy(request, *args, **kwargs)
         return Response({'code': 0, 'message': '删除成功', 'data': {}})
+
+
+class BindPhoneView(APIView):
+    def post(self, request):
+        phone = request.data.get('phone')
+        if not phone or not re.match(r'^1[3-9]\d{9}$', phone):
+            return Response({'code': 90002, 'message': '手机号格式错误', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(phone=phone).exists():
+            return Response({'code': 10003, 'message': '该手机号已被绑定', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.phone = phone
+        request.user.save()
+        return Response({'code': 0, 'message': '绑定成功', 'data': {'phone': phone}})
+
+
+class UnbindPhoneView(APIView):
+    def post(self, request):
+        if not request.user.phone:
+            return Response({'code': 10004, 'message': '未绑定手机号', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.phone = None
+        request.user.save()
+        return Response({'code': 0, 'message': '解绑成功', 'data': {}})
+
+
+class ChangePhoneView(APIView):
+    def post(self, request):
+        phone = request.data.get('phone')
+        if not phone or not re.match(r'^1[3-9]\d{9}$', phone):
+            return Response({'code': 90002, 'message': '手机号格式错误', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if phone == request.user.phone:
+            return Response({'code': 10005, 'message': '新手机号与当前手机号相同', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(phone=phone).exclude(id=request.user.id).exists():
+            return Response({'code': 10003, 'message': '该手机号已被绑定', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.phone = phone
+        request.user.save()
+        return Response({'code': 0, 'message': '换绑成功', 'data': {'phone': phone}})
+
+
+class SendEmailCodeView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        if not email or not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+            return Response({'code': 90002, 'message': '邮箱格式错误', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        code = str(random.randint(100000, 999999))
+        cache.set(f'email_code_{email}', code, timeout=300)
+        return Response({'code': 0, 'message': '验证码已发送', 'data': {}})
+
+
+class BindEmailView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        code = request.data.get('code')
+        if not email or not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+            return Response({'code': 90002, 'message': '邮箱格式错误', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if not code:
+            return Response({'code': 90002, 'message': '验证码不能为空', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        cached_code = cache.get(f'email_code_{email}')
+        if not cached_code or cached_code != code:
+            return Response({'code': 10006, 'message': '验证码错误', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=email).exists():
+            return Response({'code': 10007, 'message': '该邮箱已被绑定', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.email = email
+        request.user.save()
+        cache.delete(f'email_code_{email}')
+        return Response({'code': 0, 'message': '绑定成功', 'data': {'email': email}})
+
+
+class UnbindEmailView(APIView):
+    def post(self, request):
+        if not request.user.email:
+            return Response({'code': 10008, 'message': '未绑定邮箱', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.email = None
+        request.user.save()
+        return Response({'code': 0, 'message': '解绑成功', 'data': {}})
+
+
+class ChangeEmailView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        code = request.data.get('code')
+        if not email or not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+            return Response({'code': 90002, 'message': '邮箱格式错误', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if not code:
+            return Response({'code': 90002, 'message': '验证码不能为空', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if email == request.user.email:
+            return Response({'code': 10009, 'message': '新邮箱与当前邮箱相同', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        cached_code = cache.get(f'email_code_{email}')
+        if not cached_code or cached_code != code:
+            return Response({'code': 10006, 'message': '验证码错误', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=email).exclude(id=request.user.id).exists():
+            return Response({'code': 10007, 'message': '该邮箱已被绑定', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.email = email
+        request.user.save()
+        cache.delete(f'email_code_{email}')
+        return Response({'code': 0, 'message': '换绑成功', 'data': {'email': email}})

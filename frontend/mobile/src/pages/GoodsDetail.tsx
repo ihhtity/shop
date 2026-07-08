@@ -3,8 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getProductImage } from '@/utils/image'
 import { getGoodsDetail } from '@/api/goods'
 import { addToCart } from '@/api/cart'
-import { createOrder } from '@/api/orders'
-import { getAddressList } from '@/api/addresses'
+import { addFavorite, removeFavorite, getFavoriteStatus } from '@/api/favorites'
 import './GoodsDetail.css'
 
 function GoodsDetail() {
@@ -14,11 +13,11 @@ function GoodsDetail() {
   const [quantity] = useState(1)
   const [goods, setGoods] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [addresses, setAddresses] = useState<any[]>([])
+  const [isFavorite, setIsFavorite] = useState(false)
 
   useEffect(() => {
     fetchGoods()
-    fetchAddresses()
+    fetchFavoriteStatus()
   }, [id])
 
   const fetchGoods = async () => {
@@ -39,15 +38,56 @@ function GoodsDetail() {
     }
   }
 
-  const fetchAddresses = async () => {
+  const fetchFavoriteStatus = async () => {
+    if (!id) return
     try {
-      const result = await getAddressList()
+      const result = await getFavoriteStatus(parseInt(id))
       if (result.code === 0) {
-        setAddresses(result.data || [])
+        setIsFavorite(result.data.is_favorite)
       }
     } catch (error) {
-      console.error('Failed to fetch addresses:', error)
+      console.error('Failed to fetch favorite status:', error)
     }
+  }
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: goods?.name || '商品详情',
+        text: goods?.name || '',
+        url: window.location.href,
+      }).catch((error) => {
+        console.error('Share failed:', error)
+      })
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('链接已复制，快去分享给好友吧！')
+      }).catch(() => {
+        alert('分享功能暂不支持，请手动复制链接')
+      })
+    }
+  }
+
+  const handleFavorite = async () => {
+    if (!id) return
+    try {
+      if (isFavorite) {
+        await removeFavorite(parseInt(id))
+        setIsFavorite(false)
+        alert('已取消收藏')
+      } else {
+        await addFavorite({ goods_id: parseInt(id) })
+        setIsFavorite(true)
+        alert('收藏成功')
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error)
+      alert(isFavorite ? '取消收藏失败' : '收藏失败')
+    }
+  }
+
+  const handleContact = () => {
+    alert('客服功能开发中，您可以拨打客服热线：400-888-8888')
   }
 
   const handleAddToCart = async () => {
@@ -65,28 +105,8 @@ function GoodsDetail() {
     }
   }
 
-  const handleBuyNow = async () => {
-    const defaultAddress = addresses.find((addr: any) => addr.is_default) || addresses[0]
-    if (!defaultAddress) {
-      alert('请先添加收货地址')
-      navigate('/addresses')
-      return
-    }
-    try {
-      const result = await createOrder({
-        address_id: defaultAddress.id,
-        items: [{ goods_id: parseInt(id || '0'), quantity }],
-      })
-      if (result.code === 0) {
-        alert(`订单创建成功，订单号：${result.data.order_no}`)
-        navigate('/orders')
-      } else {
-        alert(result.message)
-      }
-    } catch (error: any) {
-      console.error('Failed to create order:', error)
-      alert(error.response?.data?.message || '下单失败')
-    }
+  const handleBuyNow = () => {
+    navigate('/checkout', { state: { goodsId: parseInt(id || '0'), quantity } })
   }
 
   if (loading) {
@@ -104,7 +124,7 @@ function GoodsDetail() {
       <div className="detail-header">
         <button className="back-btn" onClick={() => navigate(-1)}>←</button>
         <span className="header-title">商品详情</span>
-        <span className="header-share">↗</span>
+        <span className="header-share" onClick={handleShare}>↗</span>
       </div>
       <div className="detail-images">
         <div className="main-image">
@@ -135,9 +155,18 @@ function GoodsDetail() {
         </div>
       </div>
       <div className="detail-footer">
-        <button className="footer-btn cart" onClick={() => navigate('/cart')}>🛒 购物车</button>
-        <button className="footer-btn buy" onClick={handleBuyNow}>立即购买</button>
+        <div className="footer-actions">
+          <button className="action-item" onClick={handleFavorite}>
+            <span className="action-icon">{isFavorite ? '❤️' : '🤍'}</span>
+            <span className="action-label">收藏</span>
+          </button>
+          <button className="action-item" onClick={handleContact}>
+            <span className="action-icon">💬</span>
+            <span className="action-label">客服</span>
+          </button>
+        </div>
         <button className="footer-btn add-cart" onClick={handleAddToCart}>加入购物车</button>
+        <button className="footer-btn buy" onClick={handleBuyNow}>立即购买</button>
       </div>
     </div>
   )

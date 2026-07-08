@@ -4,6 +4,7 @@ from django.db import models
 
 class User(AbstractUser):
     phone = models.CharField(max_length=11, unique=True, blank=True, null=True, verbose_name='手机号')
+    email = models.EmailField(max_length=100, unique=True, blank=True, null=True, verbose_name='邮箱')
     nickname = models.CharField(max_length=64, blank=True, null=True, verbose_name='昵称')
     avatar = models.CharField(max_length=256, blank=True, null=True, verbose_name='头像')
     gender = models.SmallIntegerField(default=0, verbose_name='性别')

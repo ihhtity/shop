@@ -13,6 +13,7 @@ import Favorites from '@/pages/Favorites'
 import Addresses from '@/pages/Addresses'
 import Notifications from '@/pages/Notifications'
 import Settings from '@/pages/Settings'
+import OrderCheckout from '@/pages/OrderCheckout'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="addresses" element={<Addresses />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="checkout" element={<OrderCheckout />} />
       </Route>
       <Route path="/goods/:id" element={<GoodsDetail />} />
     </Routes>
