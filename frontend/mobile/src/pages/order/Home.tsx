@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getBannerImage, getProductImage } from '@/utils/image'
 import { getCategories, getHotGoods, getNewGoods } from '@/api/goods'
-import './Home.css'
+import '../static/Home.css'
 
 const banners = [
   { id: 1, image: getBannerImage(1, 750, 250), title: '夏日促销' },

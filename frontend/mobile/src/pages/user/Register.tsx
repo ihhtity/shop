@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { userRegister } from '@/api/users'
-import './Register.css'
+import '../static/Register.css'
 
 function Register() {
   const [loading, setLoading] = useState(false)

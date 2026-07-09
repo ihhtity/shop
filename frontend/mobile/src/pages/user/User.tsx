@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getUserInfo } from '@/api/users'
-import './User.css'
+import '../static/User.css'
 
 interface UserInfo {
   id: number

@@ -9,10 +9,12 @@ class CartSerializer(serializers.ModelSerializer):
     spec_name = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
     subtotal = serializers.SerializerMethodField()
+    goods_id = serializers.IntegerField(source='goods.id', read_only=True)
+    spec_id = serializers.IntegerField(source='spec.id', read_only=True, allow_null=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'goods', 'goods_name', 'goods_image', 'spec', 'spec_name', 'price', 'quantity', 'subtotal']
+        fields = ['id', 'goods', 'goods_id', 'goods_name', 'goods_image', 'spec', 'spec_id', 'spec_name', 'price', 'quantity', 'subtotal']
 
     def get_goods_name(self, obj):
         return obj.goods.name

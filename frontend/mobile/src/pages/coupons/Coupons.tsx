@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getCouponList, getUserCoupons, receiveCoupon } from '@/api/coupons'
 import { UserCoupon, Coupon } from '@/types'
-import './Coupons.css'
+import '../static/Coupons.css'
 
 const tabs = [
   { key: 'available', label: '可领取' },
@@ -15,6 +16,7 @@ const couponTypeMap: Record<number, string> = {
 }
 
 function Coupons() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(0)
   const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([])
   const [myCoupons, setMyCoupons] = useState<UserCoupon[]>([])
@@ -69,6 +71,11 @@ function Coupons() {
   return (
     // 优惠券页面
     <div className="coupons-page">
+      <div className="checkout-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>←</button>
+        <span className="header-title">优惠券</span>
+        <span className="header-placeholder"></span>
+      </div>
       {/* 优惠券列表选项卡 */}
       <div className="coupons-tabs">
         {tabs.map((tab, index) => (

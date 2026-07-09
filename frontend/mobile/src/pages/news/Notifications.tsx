@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getNotifications, markAsRead, markAllAsRead, deleteNotification } from '@/api/notifications'
 import { Notification } from '@/types'
-import './Notifications.css'
+import '../static/Notifications.css'
 
 const notifyTypeMap: Record<number, string> = {
   1: '系统通知',
@@ -20,6 +21,7 @@ const notifyTypeIcon: Record<number, string> = {
 }
 
 function Notifications() {
+  const navigate = useNavigate()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -98,8 +100,12 @@ function Notifications() {
   return (
     // 消息通知页
     <div className="notifications-page">
+      <div className="checkout-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>←</button>
+        <span className="header-title">消息通知</span>
+        <span className="header-placeholder"></span>
+      </div>
       <div className="notifications-header">
-        <h1>消息通知</h1>
         {unreadCount > 0 && (
           <button className="mark-all-btn" onClick={handleMarkAllAsRead}>
             全部已读

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProductImage } from '@/utils/image'
 import { getCartList, updateCart, deleteCart } from '@/api/cart'
-import './Cart.css'
+import '../static/Cart.css'
 
 function Cart() {
   const navigate = useNavigate()
@@ -119,7 +119,11 @@ function Cart() {
           <span className="total-label">合计:</span>
           <span className="total-price">¥{totalPrice}</span>
         </div>
-        <button className="checkout-btn" onClick={() => navigate('/checkout')}>结算({selectedItems.length})</button>
+        <button 
+        className={`checkout-btn ${selectedItems.length < 1 ? 'disabled' : ''}`}
+        onClick={() => selectedItems.length >= 1 && navigate('/checkout', { state: { cartItems: selectedItems } })}
+        disabled={selectedItems.length < 1}
+      >结算({selectedItems.length})</button>
       </div>
     </div>
   )

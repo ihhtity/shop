@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getOrderList } from '@/api/orders'
-import './Orders.css'
+import '../static/Orders.css'
 
 const tabs = ['全部', '待付款', '待发货', '待收货', '已完成']
 const statusMap: Record<string, string> = {
@@ -12,6 +13,7 @@ const statusMap: Record<string, string> = {
 }
 
 function Orders() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(0)
   const [orders, setOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -41,6 +43,11 @@ function Orders() {
   return (
     // 订单页
     <div className="orders-page">
+      <div className="checkout-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>←</button>
+        <span className="header-title">我的订单</span>
+        <span className="header-placeholder"></span>
+      </div>
       {/* 订单页标签 */}
       <div className="orders-tabs">
         {tabs.map((tab, index) => (

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getCategories, getGoodsList } from '@/api/goods'
 import { getProductImage } from '@/utils/image'
-import './Category.css'
+import '../static/Category.css'
 
 function Category() {
   const { id } = useParams<{ id?: string }>()

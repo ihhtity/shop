@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAddressList, createAddress, updateAddress, deleteAddress, setDefaultAddress } from '@/api/addresses'
 import { Address } from '@/types'
-import './Addresses.css'
+import '../static/Addresses.css'
 
 interface AddressForm {
   name: string
@@ -181,11 +181,10 @@ function Addresses() {
   return (
     // 收货地址页面
     <div className="addresses-page">
-      <div className="addresses-header">
-        <h1>收货地址</h1>
-        <button className="add-btn" onClick={() => setShowForm(true)}>
-          + 添加地址
-        </button>
+      <div className="checkout-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>←</button>
+        <span className="header-title">收货地址</span>
+        <button className="add-btn" onClick={() => setShowForm(true)}>+ 添加地址</button>
       </div>
       {/* 收货地址列表 */}
       {loading ? (
@@ -307,12 +306,14 @@ function Addresses() {
               />
             </div>
             <div className="form-group checkbox-group">
-              <input 
-                type="checkbox" 
-                id="is_default"
-                checked={form.is_default}
-                onChange={(e) => setForm({ ...form, is_default: e.target.checked })}
-              />
+              <div>
+                <input 
+                  type="checkbox" 
+                  id="is_default"
+                  checked={form.is_default}
+                  onChange={(e) => setForm({ ...form, is_default: e.target.checked })}
+                />
+              </div>
               <label htmlFor="is_default">设为默认地址</label>
             </div>
             <div className="modal-footer">

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { getAddressList } from '@/api/addresses'
-import { getCartList } from '@/api/cart'
+import { getCartList, deleteCart } from '@/api/cart'
 import { createOrder } from '@/api/orders'
 import { getGoodsDetail } from '@/api/goods'
-import { Address } from '@/types'
-import './OrderCheckout.css'
+import { Address, CartItem } from '@/types'
+import '../static/OrderCheckout.css'
 
 function OrderCheckout() {
   const navigate = useNavigate()
@@ -37,8 +37,8 @@ function OrderCheckout() {
   }
 
   const fetchItems = async () => {
-    const state = location.state as { goodsId?: number; quantity?: number } || {}
-    const { goodsId, quantity } = state
+    const state = location.state as { goodsId?: number; quantity?: number; cartItems?: any[] } || {}
+    const { goodsId, quantity, cartItems } = state
     
     if (goodsId) {
       try {
@@ -62,13 +62,28 @@ function OrderCheckout() {
       } finally {
         setLoading(false)
       }
+    } else if (cartItems && cartItems.length > 0) {
+      const itemsWithDetails = cartItems.map(item => ({
+        id: item.id,
+        goods_id: item.goods_id || item.goods?.id,
+        goods_name: item.goods_name || item.goods?.name,
+        goods_image: item.goods_image || item.goods?.images?.[0],
+        price: item.price || item.goods?.price,
+        quantity: item.quantity,
+        spec_id: item.spec?.id,
+        spec_name: item.spec?.name ? `${item.spec.name}: ${item.spec.value}` : ''
+      }))
+      setItems(itemsWithDetails)
+      const total = cartItems.reduce((sum, item) => sum + (parseFloat(item.subtotal) || 0), 0)
+      setTotalAmount(total)
+      setLoading(false)
     } else {
       try {
         const result = await getCartList()
         if (result.code === 0) {
           const data = result.data || {}
-          const cartItems = data.items || []
-          setItems(cartItems)
+          const cartItemsData = data.items || []
+          setItems(cartItemsData)
           setTotalAmount(parseFloat(data.total_price || '0'))
         }
       } catch (error) {
@@ -91,15 +106,29 @@ function OrderCheckout() {
     }
 
     try {
+      const state = location.state as { goodsId?: number; quantity?: number; cartItems?: CartItem[] } || {}
+      const { cartItems } = state
+
       const result = await createOrder({
         address_id: selectedAddress.id,
         items: items.map(item => ({
           goods_id: item.goods_id || item.goods?.id,
+          spec_id: item.spec_id || item.spec?.id || null,
           quantity: item.quantity
         })),
         remark
       })
+
       if (result.code === 0) {
+        if (cartItems && cartItems.length > 0) {
+          for (const cartItem of cartItems) {
+            try {
+              await deleteCart(cartItem.id)
+            } catch (error) {
+              console.error('Failed to delete cart item:', error)
+            }
+          }
+        }
         alert(`订单创建成功，订单号：${result.data.order_no}`)
         navigate('/orders')
       } else {

@@ -5,7 +5,9 @@ import {
   bindPhone, unbindPhone, changePhone,
   bindEmail, unbindEmail, changeEmail, sendEmailCode
 } from '@/api/users'
-import './Settings.css'
+import '../static/Settings.css'
+
+
 
 const menuItems = [
   { icon: '👤', label: '编辑资料', action: 'profile' },
@@ -220,8 +222,10 @@ function Settings() {
 
   return (
     <div className="settings-page">
-      <div className="settings-header">
-        <h1>设置</h1>
+      <div className="checkout-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>←</button>
+        <span className="header-title">设置</span>
+        <span className="header-placeholder"></span>
       </div>
 
       <div className="settings-menu">
@@ -239,7 +243,6 @@ function Settings() {
             {item.action === 'email' && user?.email && (
               <span className="menu-value">{user.email.replace(/(.).*@/, '$1***@')}</span>
             )}
-            <span className="menu-arrow">›</span>
           </div>
         ))}
       </div>

@@ -49,9 +49,15 @@ export interface Specification {
 export interface CartItem {
   id: number
   goods: Goods
+  goods_id: number
+  goods_name: string
+  goods_image: string
   spec: Specification | null
+  spec_id: number | null
+  spec_name: string
+  price: string | number
   quantity: number
-  subtotal: string
+  subtotal: string | number
 }
 
 export interface Address {

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { userLogin } from '@/api/users'
-import './Login.css'
+import '../static/Login.css'
 
 function Login() {
   const [loading, setLoading] = useState(false)

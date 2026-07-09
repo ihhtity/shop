@@ -4,7 +4,7 @@ import { getProductImage } from '@/utils/image'
 import { getGoodsDetail } from '@/api/goods'
 import { addToCart } from '@/api/cart'
 import { addFavorite, removeFavorite, getFavoriteStatus } from '@/api/favorites'
-import './GoodsDetail.css'
+import '../static/GoodsDetail.css'
 
 function GoodsDetail() {
   const { id } = useParams<{ id?: string }>()

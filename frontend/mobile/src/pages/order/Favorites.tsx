@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getFavorites, removeFavorite } from '@/api/favorites'
 import { addToCart } from '@/api/cart'
 import { Favorite } from '@/types'
-import './Favorites.css'
+import '../static/Favorites.css'
 
 function Favorites() {
   const [favorites, setFavorites] = useState<Favorite[]>([])
@@ -60,9 +60,13 @@ function Favorites() {
   return (
     // 收藏页面
     <div className="favorites-page">
+      <div className="checkout-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>←</button>
+        <span className="header-title">我的收藏</span>
+        <span className="header-placeholder"></span>
+      </div>
       {/* 收藏列表标题 */}
       <div className="favorites-header">
-        <h1>我的收藏</h1>
         {favorites.length > 0 && (
           <span className="favorites-count">{favorites.length}件商品</span>
         )}
